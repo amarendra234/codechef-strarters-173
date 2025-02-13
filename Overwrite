@@ -1,0 +1,108 @@
+#include <bits/stdc++.h>
+using namespace std;
+bool valid(int a[],int index1,vector<int>&b,int m){
+         int i=0;
+         while(m>0){
+              if(a[index1]>b[i]){
+                return true;
+              }
+              if(b[i]>a[index1]){
+                  return false;
+              }
+              index1++;
+              i++;
+              m--;
+         }
+         return false;
+}
+void replace(int a[],vector<int>&replace,int index1,int m){
+    int index2=0;
+    while(m>0){
+        a[index1]=replace[index2];
+        index1++;
+        index2++;
+        m--;
+    }
+}
+int main(){
+    int t;
+    cin>>t;
+    while(t--){
+        int n,m;
+        cin>>n>>m;
+        int a[n];
+        int b[m];
+        int min_val=INT_MAX;
+        int index=-1;
+        for(int i=0;i<n;i++){
+            cin>>a[i];
+        }
+        for(int i=0;i<m;i++){
+            cin>>b[i];
+            if(min_val>b[i]){
+                min_val=b[i];
+                index=i;
+            }
+        }
+        vector<int>rep(m,0);
+        int p=m;
+        int idx=0;
+    
+        while(p>0){
+            rep[idx]=b[index];
+            index++;
+            if(index==m){
+                index=index%m;
+            }
+            idx++;
+            p--;
+        }
+      
+        if(m==1){
+            for(int i=0;i<n;i++){
+                if(a[i]>min_val){
+                    a[i]=min_val;
+                }
+            }
+        }else{
+        int i=0;
+        int last_index=-1;
+        int last_index_equal=-1;
+        int ind=-1;
+        while(i<=n-m){
+            if(last_index!=-1){
+                a[i]=min_val;
+                ind=i;
+                i++;
+                continue;
+            }
+           if(a[i]>=min_val){
+                if(a[i]>min_val){
+                    ind=i;
+                   last_index=i;
+               }
+               a[i]=min_val;
+               //last_index=i;
+               last_index_equal=i;
+           }
+           i++;
+        }
+       //cout<<ind<<" "<<last_index_equal<<endl;
+       if(last_index!=-1 or last_index_equal!=-1){
+        if(last_index!=-1){
+            replace(a,rep,ind,m);
+        }else{
+             bool check=valid(a,last_index_equal,rep,m);
+             if(check){
+                replace(a,rep,last_index_equal,m); 
+             }
+        }
+       }
+        }
+        for(int i=0;i<n;i++){
+            cout<<a[i]<<" ";
+        }
+        cout<<endl;
+        
+    }
+}
